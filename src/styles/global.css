@@ -1,0 +1,31 @@
+label{
+	padding: 1%;
+	/*background: brown;*/
+	color:white;
+	font-weight: 800;
+	font-size: 1.45em;
+	/*width: 100%;*/
+	border-radius: 15px;
+}
+form{
+	border: 10px solid black;
+	/*width: 70vw;*/
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	height: 100%;
+
+}
+input{
+	width: 100%;
+}
+.initGame{
+	background: rgb(168, 226, 44);
+	width: 85vw;
+	height: 85vh;
+}
+.tile{
+	background: orange;
+	border: .1px dotted brown;
+}

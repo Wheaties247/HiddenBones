@@ -1,0 +1,10 @@
+.tileboard{
+	background: red;
+}
+.holdsTiles{
+	background: gray;
+	height: 80vh;
+	width: 80vw;
+	display: flex;
+	flex-wrap: wrap;
+}
