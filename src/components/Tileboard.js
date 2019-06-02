@@ -5,13 +5,21 @@ const {
 	tileboard,
 	holdsTiles
 } = tileboardStyles
-const Tileboard = (props) =>{
-	const {
-		tileLogic,
+class Tileboard extends React.Component{
+	constructor(props){
+		super(props)
+		this.state ={
+		}
+	}
+	componentDidMount(){
+		this.props.tileLogic()
+	}
+	// 
+	render(){
+		const {
 		generateTiles
-	} = props
-	tileLogic()
-	return(
+	} = this.props
+		return(
 		<div className={tileboard}>
 		Tileboard
 			<div className={holdsTiles}>
@@ -19,5 +27,6 @@ const Tileboard = (props) =>{
 			</div>
 		</div>
 		)
+	}
 }
 export default Tileboard

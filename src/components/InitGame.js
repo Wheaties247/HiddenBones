@@ -25,7 +25,7 @@ class InitGame extends React.Component{
 		this.props.startGame(this.state)
 	}
 	render(){
-		const {rows, columns} = this.state
+		// const {rows, columns} = this.state
 		// const {} = this.props
 		const {handleChange, gameCreds} = this
 		return(
