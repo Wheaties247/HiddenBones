@@ -144,7 +144,7 @@ class HiddenBones extends React.Component{
 			let boneFits = false
 			let boneSpace = false
 			console.log(`FOR loop`)
-			while(!boneFits && !boneSpace ){
+			while(((!boneFits) || (!boneSpace))){
 				let randomRowIndex = this.randomNumber(rows)
 				let randomColIndex = this.randomNumber(columns)
 				let coordinates = [randomRowIndex, randomColIndex]
@@ -172,6 +172,9 @@ class HiddenBones extends React.Component{
 					 }
 
 				}
+				console.log(`END OF WHILE LOOP
+					boneFits : ${boneFits}
+					boneSpace : ${boneSpace}`)
 			}
 
 				console.log(`OUTSIDE while loop`)
@@ -187,58 +190,37 @@ class HiddenBones extends React.Component{
 				 ${JSON.stringify(tileLogicArray)}`)
 		let row = coordinates[0]
 		let column = coordinates[1]
+		let logicArray = tileLogicArray
+
 			if(direction==='hor'){
 				if(addOrSub === 'add'){
 				for(let i=0; i<boneSize; i++){
-					this.setState(prevState=>{
-						prevState.tileLogicArray[row][(column + i)] = boneSize
-						console.log(`
-							WITHIN addBoneToTileLogic FOR LOOP
-							i : ${i}
-							tileLogicArray : ${prevState.tileLogicArray}`)
-						return prevState
-							})
+					logicArray[row][(column + i)] = boneSize
 					}
 				}	
 				if(addOrSub==='sub'){
 					for(let i=0; i<boneSize; i++){
-						this.setState(prevState=>{
-						prevState.tileLogicArray[row][(column -i)] = boneSize
-						console.log(`
-							WITHIN addBoneToTileLogic FOR LOOP
-							i : ${i}
-							tileLogicArray : ${prevState.tileLogicArray}`)
-						return prevState
-							})
+					logicArray[row][(column -i)] = boneSize
 					}
 				}
 			}
 			if(direction=== 'vert'){
 				if(addOrSub === 'add'){
 					for(let i=0; i<boneSize; i++){
-						this.setState(prevState=>{
-						prevState.tileLogicArray[(row + i)][column] = boneSize
-						console.log(`
-							WITHIN addBoneToTileLogic FOR LOOP
-							i : ${i}
-							tileLogicArray : ${prevState.tileLogicArray}`)
-						return prevState
-						})
+					logicArray[(row + i)][column] = boneSize
+					
 					}
 				}
 				if(addOrSub==='sub'){
 					for(let i=0; i<boneSize; i++){
-						this.setState(prevState=>{
-						prevState.tileLogicArray[(row - i)][column] = boneSize
-						console.log(`
-							WITHIN addBoneToTileLogic FOR LOOP
-							i : ${i}
-							tileLogicArray : ${prevState.tileLogicArray}`)
-						return prevState
-						})
+					logicArray[(row - i)][column] = boneSize
 					}
 				}
 			}
+			this.setState({tileLogicArray: logicArray}, ()=>{
+			 console.log(`CURRENT STATE AFTER addBoneToTileLogic Executes
+			 ${this.state.tileLogicArray} `)
+			})
 	}
 	boneSpaceQuery(coordinates, boneSize, direction, addOrSub){
 		const {tileLogicArray} = this.state
