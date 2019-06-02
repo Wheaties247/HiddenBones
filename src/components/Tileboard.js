@@ -21,7 +21,7 @@ class Tileboard extends React.Component{
 	} = this.props
 		return(
 		<div className={tileboard}>
-		Tileboard
+
 			<div className={holdsTiles}>
 			{generateTiles()}
 			</div>

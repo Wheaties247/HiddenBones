@@ -16,7 +16,8 @@ class HiddenBones extends React.Component{
 			showInitGame: true,
 			columns:null,
 			rows:null,
-			tileLogicArray:null
+			tileLogicArray:null,
+			tileContent: []
 		}
 		this.startGame = this.startGame.bind(this)
 		this.handleAsyncState = this.handleAsyncState.bind(this)
@@ -27,6 +28,7 @@ class HiddenBones extends React.Component{
 		this.canBoneFitQuery = this.canBoneFitQuery.bind(this)
 		this.boneSpaceQuery = this.boneSpaceQuery.bind(this)
 		this.addBoneToTileLogic = this.addBoneToTileLogic.bind(this)
+		this.markTile = this.markTile.bind(this)
 	}
 	handleAsyncState(attr, data, func){
 		this.setState(prevState => {
@@ -43,10 +45,13 @@ class HiddenBones extends React.Component{
 		
 		if(validRows && validColumns){
 			if((intColumns > 3) && (intRows>3) ){
+				const spaces = intColumns * intRows
+				const contentArray = Array(spaces).fill(`null`)
 				this.setState(prevState=>{
 					prevState.showInitGame = false
 					prevState.columns = intColumns
 					prevState.rows = intRows
+					prevState.tileContent = contentArray
 					return prevState
 				})
 
@@ -80,7 +85,7 @@ class HiddenBones extends React.Component{
 	generateTiles(){
 		// console.log("generateTiles")
 
-		const {rows, columns} = this.state
+		const {rows, columns, tileContent} = this.state
 		const width = 1/columns
 		const height = 1/rows
 		const widthPercent = (width*100) +"%"
@@ -92,14 +97,43 @@ class HiddenBones extends React.Component{
 		const holdsTiles =[]
 		const spaces = rows * columns;
 		for(let i =0; i < spaces; i++){
+			// const tileNumber = i+1
 			holdsTiles.push(
 			<Tile
 			key={i} 
 			dimension={dimension}
+			content = {tileContent[i]}
+			handleClick= {()=>this.markTile(i)}
 			/>) 
 		}
 		return holdsTiles
 		
+	}
+	markTile(tile){
+		 // console.log(`Tile # ${tile}`)
+		 let counter = 0
+		 const {rows, columns, tileLogicArray} = this.state
+		 for(let rowCount = 0; rowCount < rows; rowCount++){
+		 	for(let colCount = 0; colCount < columns; colCount++){
+		 			console.log(`current Iteration : 
+		 				tile: ${tile}
+		 				columns: ${colCount}
+		 				rows: ${rowCount}
+		 				counter: ${counter}`)
+
+		 		if(counter === tile){
+		 			const tileContent = tileLogicArray[rowCount][colCount]
+		 			console.log(`tileContent : ${tileContent}`)
+		 			return (this.setState(prevState=>{
+		 				prevState.tileContent[counter] = tileContent
+		 				return prevState
+		 			}))
+		 			console.log(`tile Clicked : ${tile}`)
+
+		 		}
+		 		counter++
+			 }
+		 }
 	}
 	createBones(spaces){
 		const halfSpaces = spaces/2
