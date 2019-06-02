@@ -17,7 +17,8 @@ class HiddenBones extends React.Component{
 			columns:null,
 			rows:null,
 			tileLogicArray:null,
-			tileContent: []
+			tileContent: [],
+			winQuery:false
 		}
 		this.startGame = this.startGame.bind(this)
 		this.handleAsyncState = this.handleAsyncState.bind(this)
@@ -29,6 +30,8 @@ class HiddenBones extends React.Component{
 		this.boneSpaceQuery = this.boneSpaceQuery.bind(this)
 		this.addBoneToTileLogic = this.addBoneToTileLogic.bind(this)
 		this.markTile = this.markTile.bind(this)
+		this.checkWin = this.checkWin.bind(this)
+		this.addWinArray = this.addWinArray.bind(this)
 	}
 	handleAsyncState(attr, data, func){
 		this.setState(prevState => {
@@ -127,13 +130,46 @@ class HiddenBones extends React.Component{
 		 			return (this.setState(prevState=>{
 		 				prevState.tileContent[counter] = tileContent
 		 				return prevState
+		 			}, ()=>{
+
+		 				 const winQuery = this.checkWin()
+		 				console.log(`CheckWinCALLBACK ${winQuery}`)
+		 				 
+						 if(winQuery){
+		 				console.log("You Win!")
+
+						 	this.setState({winQuery:true})
+						 }
 		 			}))
-		 			console.log(`tile Clicked : ${tile}`)
+		 			// console.log(`tile Clicked : ${tile}`)
 
 		 		}
 		 		counter++
 			 }
 		 }
+		
+	}
+	checkWin(){
+		const {tileContent, winArray} = this.state
+		let nonNullTileContent = []
+		for(let i=0; i < tileContent.length; i++){
+			if(tileContent[i] !== null){
+				nonNullTileContent.push(tileContent[i])
+			}
+		}
+		const array1 = nonNullTileContent
+		const array2 = winArray
+		if(array1.length !== array2.length){
+
+	        	return false
+			}
+		for (var i = 0; i < array1.length; i++) {
+	        if (array1[i] !== array2[i]){
+	        	return false
+	        }
+            
+   		}
+   		 return true;
 	}
 	createBones(spaces){
 		const halfSpaces = spaces/2
@@ -252,9 +288,20 @@ class HiddenBones extends React.Component{
 				}
 			}
 			this.setState({tileLogicArray: logicArray}, ()=>{
-			 console.log(`CURRENT STATE AFTER addBoneToTileLogic Executes
-			 ${this.state.tileLogicArray} `)
+			this.addWinArray()
 			})
+	}
+	addWinArray(){
+		const winArray = []
+		const {rows, columns, tileLogicArray} = this.state
+		for(let r = 0; r <rows; r++ ){
+			for(let c= 0; c<columns; c++){
+				if(tileLogicArray[r][c] !== null){
+					winArray.push(tileLogicArray[r][c])
+				}
+			}
+		}
+		this.setState({winArray})
 	}
 	boneSpaceQuery(coordinates, boneSize, direction, addOrSub){
 		const {tileLogicArray} = this.state
@@ -397,7 +444,8 @@ class HiddenBones extends React.Component{
 	render(){
 		const {
 			showInitGame, 
-			initError
+			initError,
+			winQuery
 		} = this.state
 		const {
 			startGame, 
@@ -416,6 +464,7 @@ class HiddenBones extends React.Component{
 				initError = {initError}
 				/>: 
 				<Tileboard 
+				winQuery = {winQuery}
 				generateTiles = {generateTiles}
 				tileLogic = {tileLogic}
 				/>
