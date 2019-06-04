@@ -18,7 +18,9 @@ class Tileboard extends React.Component{
 	render(){
 		const {
 		generateTiles,
-		winQuery
+		winQuery,
+		loseQuery,
+		misses
 	} = this.props
 		return(
 		<div className={tileboard}>
@@ -26,6 +28,7 @@ class Tileboard extends React.Component{
 			<div className={holdsTiles}>
 			{generateTiles()}
 			</div>
+			{misses >=loseQuery ?<h1>You Lose!</h1>: null }
 			{winQuery? <h1>You Win!</h1>: null}
 		</div>
 		)

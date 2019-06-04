@@ -18,7 +18,9 @@ class HiddenBones extends React.Component{
 			rows:null,
 			tileLogicArray:null,
 			tileContent: [],
-			winQuery:false
+			winQuery:false,
+			loseQuery:0,
+			misses:0
 		}
 		this.startGame = this.startGame.bind(this)
 		this.handleAsyncState = this.handleAsyncState.bind(this)
@@ -32,6 +34,7 @@ class HiddenBones extends React.Component{
 		this.markTile = this.markTile.bind(this)
 		this.checkWin = this.checkWin.bind(this)
 		this.addWinArray = this.addWinArray.bind(this)
+		this.checkLose = this.checkLose.bind(this)
 	}
 	handleAsyncState(attr, data, func){
 		this.setState(prevState => {
@@ -50,11 +53,13 @@ class HiddenBones extends React.Component{
 			if((intColumns > 3) && (intRows>3) ){
 				const spaces = intColumns * intRows
 				const contentArray = Array(spaces).fill(`null`)
+				const loseQuery = Math.floor(spaces/3)
 				this.setState(prevState=>{
 					prevState.showInitGame = false
 					prevState.columns = intColumns
 					prevState.rows = intRows
 					prevState.tileContent = contentArray
+					prevState.loseQuery = loseQuery
 					return prevState
 				})
 
@@ -131,10 +136,10 @@ class HiddenBones extends React.Component{
 		 				prevState.tileContent[counter] = tileContent
 		 				return prevState
 		 			}, ()=>{
-
+		 				this.checkLose()
 		 				 const winQuery = this.checkWin()
 		 				console.log(`CheckWinCALLBACK ${winQuery}`)
-		 				 
+
 						 if(winQuery){
 		 				console.log("You Win!")
 
@@ -148,6 +153,17 @@ class HiddenBones extends React.Component{
 			 }
 		 }
 		
+	}
+	checkLose(){
+		const {tileContent} = this.state
+		let missCount = 0
+		for(let i=0; i < tileContent.length; i++){
+			
+			if(tileContent[i] === null){
+				missCount++
+			}
+		}
+		this.setState({misses:missCount})
 	}
 	checkWin(){
 		const {tileContent, winArray} = this.state
@@ -445,7 +461,9 @@ class HiddenBones extends React.Component{
 		const {
 			showInitGame, 
 			initError,
-			winQuery
+			winQuery,
+			loseQuery,
+			misses
 		} = this.state
 		const {
 			startGame, 
@@ -464,6 +482,8 @@ class HiddenBones extends React.Component{
 				initError = {initError}
 				/>: 
 				<Tileboard 
+				loseQuery ={loseQuery}
+				misses	= {misses}
 				winQuery = {winQuery}
 				generateTiles = {generateTiles}
 				tileLogic = {tileLogic}
