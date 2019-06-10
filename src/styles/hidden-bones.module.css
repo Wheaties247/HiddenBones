@@ -1,5 +1,5 @@
 .hiddenBonesLanding{
-	background: rgb(168, 226, 44);
+	background: rgb(101, 191,155);
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -7,10 +7,12 @@
 	align-items: center;
 }
 .gameBoardHolder{
+	background: rgb(190, 89, 46);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background: brown;
 	height: 90vh;
 	width: 90vw;
+	border-radius: 5px;
 }

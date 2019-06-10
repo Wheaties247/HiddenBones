@@ -20,8 +20,10 @@ class Tileboard extends React.Component{
 		generateTiles,
 		winQuery,
 		loseQuery,
-		misses
+		misses,
+		initGame
 	} = this.props
+	
 		return(
 		<div className={tileboard}>
 
@@ -32,6 +34,9 @@ class Tileboard extends React.Component{
 			{winQuery? <h1>You Win!</h1>: null}
 		</div>
 		)
+	
+
+		
 	}
 }
 export default Tileboard

@@ -20,7 +20,8 @@ class InitGame extends React.Component{
 		})
 	}
 	gameCreds(){
-		// this.props.handleAsyncState("initError", "",
+		// const {handleAsyncState, startGame} = this.props
+		// handleAsyncState(`initGame`, true , startGame(this.state))
 		// ()=>setTimeout(, 1000) )
 		this.props.startGame(this.state)
 	}
@@ -31,7 +32,6 @@ class InitGame extends React.Component{
 		return(
 		<div className="initGame">
 			<form>
-			InitGame
 				<label htmlFor="columns">
 				   Select number of columns:
 				   <input 

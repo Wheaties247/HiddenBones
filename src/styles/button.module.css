@@ -1,16 +1,16 @@
 .buttonDimentions{
 	width: 20vw;
-	background: lightblue;
+	background: rgb(189, 216, 236);
 	border:3px solid gray;
 	border-radius: 15px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	color: rgb(40, 41, 35);
+	color: rgb(149, 116, 175);
 }
 .buttonDimentions:hover{
-	background:  rgb(40, 41, 35);
-	color: lightblue;
+	background:  rgb(149, 116, 175);
+	color: rgb(189, 216, 236);
 }
 .buttonText{
 	margin:5%;

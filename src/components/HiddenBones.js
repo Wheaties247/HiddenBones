@@ -20,7 +20,8 @@ class HiddenBones extends React.Component{
 			tileContent: [],
 			winQuery:false,
 			loseQuery:0,
-			misses:0
+			misses:0,
+			initGame:false
 		}
 		this.startGame = this.startGame.bind(this)
 		this.handleAsyncState = this.handleAsyncState.bind(this)
@@ -85,7 +86,8 @@ class HiddenBones extends React.Component{
 			array.push(column)
 		}
 		// console.log("populated Array", array)
-		this.setState({tileLogicArray: array}, ()=>{
+		this.setState({tileLogicArray: array, initGame: true}, ()=>{
+			console.log("INIT GAME: TRUE")
 			this.createBones(spaces)
 		})
 		
@@ -264,6 +266,7 @@ class HiddenBones extends React.Component{
 			}
 
 				console.log(`OUTSIDE while loop`)
+				this.setState({initGame:false}, ()=> console.log("INIT GAME : FALSE"))
 		}
 
 
@@ -318,6 +321,7 @@ class HiddenBones extends React.Component{
 			}
 		}
 		this.setState({winArray})
+
 	}
 	boneSpaceQuery(coordinates, boneSize, direction, addOrSub){
 		const {tileLogicArray} = this.state
@@ -463,7 +467,8 @@ class HiddenBones extends React.Component{
 			initError,
 			winQuery,
 			loseQuery,
-			misses
+			misses,
+			initGame
 		} = this.state
 		const {
 			startGame, 
@@ -473,7 +478,6 @@ class HiddenBones extends React.Component{
 		} = this
 		return(
 		<div className ={hiddenBonesLanding}>
-			HiddenBones
 			<div className={gameBoardHolder}>
 			{showInitGame? 
 				<InitGame
@@ -481,7 +485,8 @@ class HiddenBones extends React.Component{
 				startGame = {startGame}
 				initError = {initError}
 				/>: 
-				<Tileboard 
+				<Tileboard
+				initGame = {initGame} 
 				loseQuery ={loseQuery}
 				misses	= {misses}
 				winQuery = {winQuery}
