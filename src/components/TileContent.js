@@ -42,7 +42,7 @@ const TileContent =(props)=>{
 		}
 	}
 
-	if(content===`null`){
+	if(content===`unclicked`){
 		return (
 			<div className= "holdsContent">
 			{ null}

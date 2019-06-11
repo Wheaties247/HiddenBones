@@ -53,7 +53,7 @@ class HiddenBones extends React.Component{
 		if(validRows && validColumns){
 			if((intColumns > 3) && (intRows>3) ){
 				const spaces = intColumns * intRows
-				const contentArray = Array(spaces).fill(`null`)
+				const contentArray = Array(spaces).fill(`unclicked`)
 				const loseQuery = Math.floor(spaces/3)
 				this.setState(prevState=>{
 					prevState.showInitGame = false
@@ -169,19 +169,20 @@ class HiddenBones extends React.Component{
 	}
 	checkWin(){
 		const {tileContent, winArray} = this.state
-		let nonNullTileContent = []
+		let numberedTileContent = []
 		for(let i=0; i < tileContent.length; i++){
-			if(tileContent[i] !== null){
-				nonNullTileContent.push(tileContent[i])
+			if(typeof tileContent[i] === "number"){
+				numberedTileContent.push(tileContent[i])
 			}
 		}
-		const array1 = nonNullTileContent
-		const array2 = winArray
-		if(array1.length !== array2.length){
 
+		const array1 = numberedTileContent.sort((a, b)=> b-a)
+		const array2 = winArray
+		console.log("numberedTileContent", array1)
+		if(array1.length !== array2.length){
 	        	return false
 			}
-		for (var i = 0; i < array1.length; i++) {
+		for (let i = 0; i < array1.length; i++) {
 	        if (array1[i] !== array2[i]){
 	        	return false
 	        }
@@ -320,6 +321,7 @@ class HiddenBones extends React.Component{
 				}
 			}
 		}
+		winArray.sort((a, b)=> b-a)
 		this.setState({winArray})
 
 	}
