@@ -43,15 +43,30 @@ const TileContent =(props)=>{
 	}
 
 	if(content===`null`){
-		return <div className= "holdsContent">{ null}</div>
+		return (
+			<div className= "holdsContent">
+			{ null}
+			</div>
+			)
 	}
 	if(content){
 		return (
-			{content=>renderImage(content)}
+			<div className= "holdsContent">
+
+			{renderImage(content)}
+			</div>
+
 			)
 	}
 	if(content===null){
-		return <div className="hole">Miss</div>
+		return (
+			<div className= "holdsContent">
+
+				<div className="hole">
+				Miss
+				</div>
+			</div>
+			)
 	}
 
 }
