@@ -559,7 +559,7 @@ class HiddenBones extends React.Component{
 							
 						</div>
 						<div className="scorewords">
-							<h6> X {twoSize}</h6> 
+							<h6> X {fiveSize}</h6> 
 						</div>
 
 						
@@ -628,7 +628,7 @@ class HiddenBones extends React.Component{
 												{showMovesToWin(data)}
 											</div>
 											<div className="gameUI">
-
+												To lose {misses}/{loseQuery}
 											</div>
 									</div>
 									<div className={gameBoardHolder}>
