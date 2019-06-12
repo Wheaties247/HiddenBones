@@ -21,14 +21,14 @@ class Tileboard extends React.Component{
 		winQuery,
 		loseQuery,
 		misses,
-		initGame
+		initGame,
+		picData
 	} = this.props
 	
 		return(
 		<div className={tileboard}>
-
 			<div className={holdsTiles}>
-			{generateTiles()}
+			{generateTiles(picData)}
 			</div>
 			{misses >=loseQuery ?<h1>You Lose!</h1>: null }
 			{winQuery? <h1>You Win!</h1>: null}

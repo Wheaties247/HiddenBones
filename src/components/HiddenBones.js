@@ -3,10 +3,13 @@ import hiddenBoneStyles from '../styles/hidden-bones.module.css'
 import InitGame from "./InitGame"
 import Tileboard from "./Tileboard"
 import Tile from "./Tile"
+import { StaticQuery, graphql } from "gatsby"
+import Img from "gatsby-image"
 
 const {
 	hiddenBonesLanding,
-	 gameBoardHolder
+	gameBoardHolder,
+	gameInfo
 	} = hiddenBoneStyles
 class HiddenBones extends React.Component{
 	constructor(props){
@@ -16,13 +19,17 @@ class HiddenBones extends React.Component{
 			showInitGame: true,
 			columns:null,
 			rows:null,
+			winArray: null,
 			tileLogicArray:null,
 			tileContent: [],
 			winQuery:false,
 			loseQuery:0,
 			misses:0,
-			initGame:false
+			initGame:false,
+			bonesToGo:0,
+			markedTile:[]
 		}
+		this.showMovesToWin= this.showMovesToWin.bind(this)
 		this.startGame = this.startGame.bind(this)
 		this.handleAsyncState = this.handleAsyncState.bind(this)
 		this.tileLogic = this.tileLogic.bind(this)
@@ -92,7 +99,7 @@ class HiddenBones extends React.Component{
 		})
 		
 	}
-	generateTiles(){
+	generateTiles(data){
 		// console.log("generateTiles")
 
 		const {rows, columns, tileContent} = this.state
@@ -110,6 +117,7 @@ class HiddenBones extends React.Component{
 			// const tileNumber = i+1
 			holdsTiles.push(
 			<Tile
+			picData={data}
 			key={i} 
 			dimension={dimension}
 			content = {tileContent[i]}
@@ -122,39 +130,45 @@ class HiddenBones extends React.Component{
 	markTile(tile){
 		 // console.log(`Tile # ${tile}`)
 		 let counter = 0
-		 const {rows, columns, tileLogicArray} = this.state
-		 for(let rowCount = 0; rowCount < rows; rowCount++){
-		 	for(let colCount = 0; colCount < columns; colCount++){
-		 			console.log(`current Iteration : 
-		 				tile: ${tile}
-		 				columns: ${colCount}
-		 				rows: ${rowCount}
-		 				counter: ${counter}`)
+		 const {rows, columns, tileLogicArray, markedTile} = this.state
+		 if(!markedTile.includes(tile)){
+			 	for(let rowCount = 0; rowCount < rows; rowCount++){
+			 	for(let colCount = 0; colCount < columns; colCount++){
+			 			console.log(`current Iteration : 
+			 				tile: ${tile}
+			 				columns: ${colCount}
+			 				rows: ${rowCount}
+			 				counter: ${counter}`)
 
-		 		if(counter === tile){
-		 			const tileContent = tileLogicArray[rowCount][colCount]
-		 			console.log(`tileContent : ${tileContent}`)
-		 			return (this.setState(prevState=>{
-		 				prevState.tileContent[counter] = tileContent
-		 				return prevState
-		 			}, ()=>{
-		 				this.checkLose()
-		 				 const winQuery = this.checkWin()
-		 				console.log(`CheckWinCALLBACK ${winQuery}`)
+			 		if(counter === tile){
+			 			const tileContent = tileLogicArray[rowCount][colCount]
+			 			console.log(`tileContent : ${tileContent}`)
+			 			return (this.setState(prevState=>{
+			 				prevState.markedTile.push(tile)
+			 				prevState.tileContent[counter] = tileContent
+			 				if(tileContent!==null){
+			 					const boneIndex = prevState.bonesToGo.indexOf(tileContent)
+			 				 prevState.bonesToGo.splice(boneIndex, 1)
+			 				}
+			 				return prevState
+			 			}, ()=>{
+			 				this.checkLose()
+			 				 const winQuery = this.checkWin()
+			 				console.log(`CheckWinCALLBACK ${winQuery}`)
 
-						 if(winQuery){
-		 				console.log("You Win!")
+							 if(winQuery){
+			 				console.log("You Win!")
 
-						 	this.setState({winQuery:true})
-						 }
-		 			}))
-		 			// console.log(`tile Clicked : ${tile}`)
+							 	this.setState({winQuery:true})
+							 }
+			 			}))
+			 			// console.log(`tile Clicked : ${tile}`)
 
-		 		}
-		 		counter++
+			 		}
+			 		counter++
+				 }
 			 }
-		 }
-		
+		}
 	}
 	checkLose(){
 		const {tileContent} = this.state
@@ -322,7 +336,7 @@ class HiddenBones extends React.Component{
 			}
 		}
 		winArray.sort((a, b)=> b-a)
-		this.setState({winArray})
+		this.setState({winArray, bonesToGo:winArray})
 
 	}
 	boneSpaceQuery(coordinates, boneSize, direction, addOrSub){
@@ -463,44 +477,185 @@ class HiddenBones extends React.Component{
 		console.log(`randomNumber : ${random}`)
 		return random
 	}
-	render(){
-		const {
-			showInitGame, 
-			initError,
-			winQuery,
-			loseQuery,
-			misses,
-			initGame
-		} = this.state
-		const {
-			startGame, 
-			handleAsyncState,
-			tileLogic,
-			generateTiles
-		} = this
-		return(
-		<div className ={hiddenBonesLanding}>
-			<div className={gameBoardHolder}>
-			{showInitGame? 
-				<InitGame
-				handleAsyncState = {handleAsyncState}
-				startGame = {startGame}
-				initError = {initError}
-				/>: 
-				<Tileboard
-				initGame = {initGame} 
-				loseQuery ={loseQuery}
-				misses	= {misses}
-				winQuery = {winQuery}
-				generateTiles = {generateTiles}
-				tileLogic = {tileLogic}
-				/>
-			}
+	showMovesToWin(data){
+	const {dogBone, dinoSkull, skull, fish} = data
+		const {bonesToGo} = this.state
+		
+		let twoSize =0
+		let threeSize =0
+		let fourSize =0
+		let fiveSize =0
 
+		for (let i=0; i<bonesToGo.length; i++){
+			if(bonesToGo[i]===2){
+				twoSize++
+			}
+			if(bonesToGo[i]===3){
+				threeSize++
+			}
+			if(bonesToGo[i]===4){
+				fourSize++
+			}
+			if(bonesToGo[i]===5){
+				fiveSize++
+			}
+		}
+		let holdsRender = (
+			<div className = "holdsRender">
+				
+				{twoSize?
+					<div className="scoreboard">
+						<div>
+						  	<Img 
+							fluid ={dogBone.childImageSharp.fluid} 
+							alt = "bone"
+							/> 
+						</div>
+						<div className="scorewords">
+							<h6> X {twoSize}</h6>
+						</div>
+
+						
+					</div>: null
+				}
+				{threeSize? 
+					<div className="scoreboard">
+						<div>
+							<Img 
+							fluid ={fish.childImageSharp.fluid} 
+							alt = "bone"
+							/> 
+							
+						</div>
+						<div className="scorewords">
+							<h6> X {threeSize}</h6> 
+						</div>
+
+						
+					</div>:null
+				}
+				{fourSize? 
+					<div className="scoreboard">
+						<div>
+							<Img 
+							fluid ={skull.childImageSharp.fluid} 
+							alt = "bone"
+							/> 
+						</div>
+						<div className="scorewords">
+							<h6> X {fourSize}</h6> 
+						</div>
+						
+					</div>
+					:null
+				}
+				{fiveSize? 
+					<div className="scoreboard">
+						<div>
+							<Img 
+							fluid ={dinoSkull.childImageSharp.fluid} 
+							alt = "bone"
+							/> 
+							
+						</div>
+						<div className="scorewords">
+							<h6> X {twoSize}</h6> 
+						</div>
+
+						
+					</div>
+					:null
+				}
 			</div>
-		</div>
+				)
+		return holdsRender
+	}
+	render(){
+		return(
+			<StaticQuery 
+				query={
+					graphql`{ 
+						dogBone: file(relativePath: {eq: "dogBone.png"}){
+						    childImageSharp{
+						      fluid(maxWidth:900){
+						        ...GatsbyImageSharpFluid
+						      }
+						    }
+						  }
+						dinoSkull: file(relativePath: {eq: "dinoSkull.png"}){
+				 		    childImageSharp{
+		 		     		  fluid(maxWidth:900){
+		 		        	   ...GatsbyImageSharpFluid
+			 		          }
+				   		    }
+				   		  }
+				   		skull: file(relativePath: {eq: "skull.png"}){
+				   	 		childImageSharp{
+				      		  fluid(maxWidth:900){
+				       		   ...GatsbyImageSharpFluid
+				 		      }
+						    }
+						  }
+						fish: file(relativePath: {eq: "fish.png"}){
+					    	childImageSharp{
+					      	  fluid(maxWidth:900){
+					           ...GatsbyImageSharpFluid
+						      }
+						    }
+						  }
+						}`
+				} 
+				render={(data)=>{
+								const {
+								showInitGame, 
+								initError,
+								winQuery,
+								loseQuery,
+								misses,
+								initGame
+							} = this.state
+							const {
+								startGame, 
+								handleAsyncState,
+								tileLogic,
+								generateTiles,
+								showMovesToWin
+							} = this
+								return(
+									<div className ={hiddenBonesLanding}>
+										<div className = {gameInfo}>
+											<div className="gameUI">
+												{showMovesToWin(data)}
+											</div>
+											<div className="gameUI">
+
+											</div>
+									</div>
+									<div className={gameBoardHolder}>
+									{showInitGame? 
+										<InitGame
+										handleAsyncState = {handleAsyncState}
+										startGame = {startGame}
+										initError = {initError}
+										/>: 
+										<Tileboard
+										picData={data}
+										initGame = {initGame} 
+										loseQuery ={loseQuery}
+										misses	= {misses}
+										winQuery = {winQuery}
+										generateTiles = {generateTiles}
+										tileLogic = {tileLogic}
+										/>
+									}
+
+										</div>
+									</div>
+								)
+					}}
+			/>
 		)
 	}
-	
+
 }
 export default HiddenBones
