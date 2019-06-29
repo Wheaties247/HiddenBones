@@ -1,10 +1,11 @@
 import React from "react"
 import Img from "gatsby-image"
-
+import Hole from "./Hole"
 
 const TileContent =(props)=>{
-	const {content, image} = props
+	const {content, image, dimension} = props
 	const {dogBone, dinoSkull, skull, fish} = image
+	// console.log("dimension", dimension);
 	const renderImage = mark =>{
 		switch(mark){
 			case 2:
@@ -51,7 +52,7 @@ const TileContent =(props)=>{
 	}
 	if(content){
 		return (
-			<div className= "holdsContent">
+			<div style={dimension} className= "holdsContent">
 
 			{renderImage(content)}
 			</div>
@@ -60,12 +61,7 @@ const TileContent =(props)=>{
 	}
 	if(content===null){
 		return (
-			<div className= "holdsContent">
-
-				<div className="hole">
-				Miss
-				</div>
-			</div>
+				<Hole/>
 			)
 	}
 

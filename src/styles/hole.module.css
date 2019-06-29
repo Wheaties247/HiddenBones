@@ -1,0 +1,28 @@
+.container{
+	/*display: flex;
+	justify-content: center;
+	align-items: center;*/
+	height: 50%;
+	width: 50%;
+	background: rgb(160, 115, 74);
+}
+.background{
+	
+	height: 100%;
+	width: 100%;
+}
+.outerHole{
+	background: rgb(104, 74, 62);
+	height: 100%;
+	width: 100%;
+	border-radius: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.innerHole{
+	background: rgb(86, 57, 53);
+	border-radius: 100%;
+	height: 40%;
+	width: 40%;
+}

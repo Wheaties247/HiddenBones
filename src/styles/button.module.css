@@ -13,5 +13,8 @@
 	color: rgb(189, 216, 236);
 }
 .buttonText{
-	margin:5%;
+	font-family: 'Reenie Beanie', cursive;
+	font-size: 2em;
+	padding: 3%;
+	margin:0%;
 }

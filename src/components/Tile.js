@@ -19,6 +19,7 @@ const Tile =(props)=>{
 				<TileContent
 				image ={picData}
 				content = {content}
+				dimension = {dimension }
 				/>
 				</div>
 		

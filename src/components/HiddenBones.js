@@ -9,7 +9,8 @@ import Img from "gatsby-image"
 const {
 	hiddenBonesLanding,
 	gameBoardHolder,
-	gameInfo
+	gameInfo,
+	gameTitle
 	} = hiddenBoneStyles
 class HiddenBones extends React.Component{
 	constructor(props){
@@ -71,7 +72,9 @@ class HiddenBones extends React.Component{
 					return prevState
 				})
 
-			}else{
+			}
+
+			else{
 			// 	console.log(
 			// `startGame,
 			// choose numbers greater than 3 for rows and columns
@@ -505,14 +508,14 @@ class HiddenBones extends React.Component{
 				
 				{twoSize?
 					<div className="scoreboard">
-						<div>
+						<div >
 						  	<Img 
 							fluid ={dogBone.childImageSharp.fluid} 
 							alt = "bone"
 							/> 
 						</div>
 						<div className="scorewords">
-							<h6> X {twoSize}</h6>
+							<h6 className="gameLabels"> X {twoSize}</h6>
 						</div>
 
 						
@@ -528,7 +531,7 @@ class HiddenBones extends React.Component{
 							
 						</div>
 						<div className="scorewords">
-							<h6> X {threeSize}</h6> 
+							<h6 className="gameLabels"> X {threeSize}</h6> 
 						</div>
 
 						
@@ -543,7 +546,7 @@ class HiddenBones extends React.Component{
 							/> 
 						</div>
 						<div className="scorewords">
-							<h6> X {fourSize}</h6> 
+							<h6 className="gameLabels"> X {fourSize}</h6> 
 						</div>
 						
 					</div>
@@ -559,7 +562,7 @@ class HiddenBones extends React.Component{
 							
 						</div>
 						<div className="scorewords">
-							<h6> X {fiveSize}</h6> 
+							<h6 className="gameLabels"> X {fiveSize}</h6> 
 						</div>
 
 						
@@ -623,12 +626,15 @@ class HiddenBones extends React.Component{
 							} = this
 								return(
 									<div className ={hiddenBonesLanding}>
+									<h1 className= {gameTitle}>Hidden Bones</h1>
 										<div className = {gameInfo}>
 											<div className="gameUI">
 												{showMovesToWin(data)}
 											</div>
 											<div className="gameUI">
-												To lose {misses}/{loseQuery}
+												{showInitGame?
+												 null:
+												  <h1 className="loseLabel">To lose {misses}/{loseQuery}</h1>}
 											</div>
 									</div>
 									<div className={gameBoardHolder}>
