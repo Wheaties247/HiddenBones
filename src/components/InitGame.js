@@ -50,7 +50,7 @@ class InitGame extends React.Component{
 				   onChange= {handleChange}
 				   />
 				 </label>
-				 {this.props.initError===""? null: this.props.initError}
+				 {this.props.initError===""? null: <p className="errorMsg">{this.props.initError}</p>}
 				<Button
 				handleClick={gameCreds}
 				>

@@ -24,7 +24,7 @@
 	display: flex;
 	justify-content: space-between;
 	height: 9vh;
-	width: 94vw;
+	width: 100vw;
 	margin: 1%;
 	padding: 3%;
 
@@ -34,4 +34,19 @@
 	top: 1%;
 	font-size: 2em;
 	font-family: 'Permanent Marker', cursive;
+}
+.scoreboard{
+	/*background: blue;*/
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 20%;
+	/*height: 100%;*/
+	font-size: 2em;
+	/*border:2px solid black;*/
+}
+.gameLabels{
+	margin:3%;
+		font-size: 1em;
+		font-family: 'Reenie Beanie', cursive;
 }

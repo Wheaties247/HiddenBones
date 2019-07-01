@@ -7,6 +7,7 @@
 	justify-content: center;
 	align-items: center;
 	color: rgb(149, 116, 175);
+	/*padding: 1%;*/
 }
 .buttonDimentions:hover{
 	background:  rgb(149, 116, 175);
@@ -15,6 +16,12 @@
 .buttonText{
 	font-family: 'Reenie Beanie', cursive;
 	font-size: 2em;
-	padding: 3%;
+	padding: 5%;
 	margin:0%;
+}
+@media(max-width: 825px){
+	.buttonText{
+	font-size: 1.1em;
+
+	}
 }

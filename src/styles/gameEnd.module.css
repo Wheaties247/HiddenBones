@@ -1,0 +1,21 @@
+.container {
+	position: fixed;
+	top: 2%;
+	left: 2%;
+	background: red;
+	height: 95vh;
+	width: 95vw;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+.title{
+	font-family: 'Permanent Marker', cursive;
+	font-size:4em;
+}
+.buttonContainer{
+	width: 80%;
+	display: flex;
+	justify-content: space-between;
+}

@@ -10,7 +10,9 @@ const {
 	hiddenBonesLanding,
 	gameBoardHolder,
 	gameInfo,
-	gameTitle
+	gameTitle,
+	scoreboard,
+	gameLabels
 	} = hiddenBoneStyles
 class HiddenBones extends React.Component{
 	constructor(props){
@@ -20,7 +22,6 @@ class HiddenBones extends React.Component{
 			showInitGame: true,
 			columns:null,
 			rows:null,
-			winArray: null,
 			tileLogicArray:null,
 			tileContent: [],
 			winQuery:false,
@@ -30,6 +31,8 @@ class HiddenBones extends React.Component{
 			bonesToGo:0,
 			markedTile:[]
 		}
+		this.newGame = this.newGame.bind(this)
+		this.playAgain = this.playAgain.bind(this)
 		this.showMovesToWin= this.showMovesToWin.bind(this)
 		this.startGame = this.startGame.bind(this)
 		this.handleAsyncState = this.handleAsyncState.bind(this)
@@ -146,19 +149,22 @@ class HiddenBones extends React.Component{
 			 		if(counter === tile){
 			 			const tileContent = tileLogicArray[rowCount][colCount]
 			 			console.log(`tileContent : ${tileContent}`)
+			 			
 			 			return (this.setState(prevState=>{
 			 				prevState.markedTile.push(tile)
 			 				prevState.tileContent[counter] = tileContent
 			 				if(tileContent!==null){
 			 					const boneIndex = prevState.bonesToGo.indexOf(tileContent)
+			 					
 			 				 prevState.bonesToGo.splice(boneIndex, 1)
+			 					
+
 			 				}
 			 				return prevState
 			 			}, ()=>{
 			 				this.checkLose()
-			 				 const winQuery = this.checkWin()
-			 				console.log(`CheckWinCALLBACK ${winQuery}`)
-
+			 				// console.log(`CheckWinCALLBACK ${winQuery}`)
+									const winQuery = this.checkWin()
 							 if(winQuery){
 			 				console.log("You Win!")
 
@@ -185,27 +191,12 @@ class HiddenBones extends React.Component{
 		this.setState({misses:missCount})
 	}
 	checkWin(){
-		const {tileContent, winArray} = this.state
-		let numberedTileContent = []
-		for(let i=0; i < tileContent.length; i++){
-			if(typeof tileContent[i] === "number"){
-				numberedTileContent.push(tileContent[i])
-			}
-		}
-
-		const array1 = numberedTileContent.sort((a, b)=> b-a)
-		const array2 = winArray
-		console.log("numberedTileContent", array1)
-		if(array1.length !== array2.length){
-	        	return false
-			}
-		for (let i = 0; i < array1.length; i++) {
-	        if (array1[i] !== array2[i]){
-	        	return false
-	        }
-            
-   		}
-   		 return true;
+		const { bonesToGo} = this.state
+		if(bonesToGo.length){
+			return false;
+		}else{
+			return true;
+		} 
 	}
 	createBones(spaces){
 		const halfSpaces = spaces/2
@@ -333,13 +324,14 @@ class HiddenBones extends React.Component{
 		const {rows, columns, tileLogicArray} = this.state
 		for(let r = 0; r <rows; r++ ){
 			for(let c= 0; c<columns; c++){
-				if(tileLogicArray[r][c] !== null){
+				if(typeof tileLogicArray[r][c] === "number"){
 					winArray.push(tileLogicArray[r][c])
 				}
 			}
 		}
 		winArray.sort((a, b)=> b-a)
-		this.setState({winArray, bonesToGo:winArray})
+		this.setState({ bonesToGo:winArray})
+		console.log("addWin Array Running")
 
 	}
 	boneSpaceQuery(coordinates, boneSize, direction, addOrSub){
@@ -507,62 +499,62 @@ class HiddenBones extends React.Component{
 			<div className = "holdsRender">
 				
 				{twoSize?
-					<div className="scoreboard">
-						<div >
+					<div className={scoreboard}>
+						<div className="imgDiv">
 						  	<Img 
 							fluid ={dogBone.childImageSharp.fluid} 
 							alt = "bone"
 							/> 
 						</div>
-						<div className="scorewords">
-							<h6 className="gameLabels"> X {twoSize}</h6>
+						<div >
+							<h6 className={gameLabels}> X {twoSize}</h6>
 						</div>
 
 						
 					</div>: null
 				}
 				{threeSize? 
-					<div className="scoreboard">
-						<div>
+					<div className={scoreboard}>
+						<div className="imgDiv">
 							<Img 
 							fluid ={fish.childImageSharp.fluid} 
 							alt = "bone"
 							/> 
 							
 						</div>
-						<div className="scorewords">
-							<h6 className="gameLabels"> X {threeSize}</h6> 
+						<div >
+							<h6 className={gameLabels}> X {threeSize}</h6> 
 						</div>
 
 						
 					</div>:null
 				}
 				{fourSize? 
-					<div className="scoreboard">
-						<div>
+					<div className={scoreboard}>
+						<div className="imgDiv">
 							<Img 
 							fluid ={skull.childImageSharp.fluid} 
 							alt = "bone"
 							/> 
 						</div>
-						<div className="scorewords">
-							<h6 className="gameLabels"> X {fourSize}</h6> 
+						<div >
+							<h6 className={gameLabels}> X {fourSize}</h6> 
 						</div>
 						
 					</div>
 					:null
 				}
 				{fiveSize? 
-					<div className="scoreboard">
-						<div>
+					<div className={scoreboard}>
+						<div className="imgDiv">
 							<Img 
 							fluid ={dinoSkull.childImageSharp.fluid} 
 							alt = "bone"
 							/> 
 							
 						</div>
-						<div className="scorewords">
-							<h6 className="gameLabels"> X {fiveSize}</h6> 
+						<div >
+							<h6 className={gameLabels}> X {fiveSize}</h6> 
 						</div>
 
 						
@@ -572,6 +564,29 @@ class HiddenBones extends React.Component{
 			</div>
 				)
 		return holdsRender
+	}
+	newGame(){
+		console.log("NewGame")
+		this.setState({
+			showInitGame:true, 
+			loseQuery:0,
+			bonesToGo:0,
+			markedTile:[],
+			tileContent: [],
+			winQuery:false,
+			misses:0,
+		})
+	}
+	playAgain(){
+		this.setState({
+			showInitGame:true, 
+			loseQuery:0,
+			bonesToGo:0,
+			markedTile:[],
+			tileContent: [],
+			winQuery:false,
+			misses:0,
+		}, ()=>this.startGame(this.state))
 	}
 	render(){
 		return(
@@ -622,7 +637,9 @@ class HiddenBones extends React.Component{
 								handleAsyncState,
 								tileLogic,
 								generateTiles,
-								showMovesToWin
+								showMovesToWin,
+								newGame,
+								playAgain
 							} = this
 								return(
 									<div className ={hiddenBonesLanding}>
@@ -645,6 +662,8 @@ class HiddenBones extends React.Component{
 										initError = {initError}
 										/>: 
 										<Tileboard
+										playAgain={playAgain}
+										newGame = {newGame}
 										picData={data}
 										initGame = {initGame} 
 										loseQuery ={loseQuery}

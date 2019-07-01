@@ -1,5 +1,6 @@
 import React from "react"
 import tileboardStyles from "../styles/tileboard.module.css"
+import GameEnd from "./GameEnd"
 
 const {
 	tileboard,
@@ -30,8 +31,17 @@ class Tileboard extends React.Component{
 			<div className={holdsTiles}>
 			{generateTiles(picData)}
 			</div>
-			{misses >=loseQuery ?<h1>You Lose!</h1>: null }
-			{winQuery? <h1>You Win!</h1>: null}
+			{misses >=loseQuery ?
+				<GameEnd 
+				newGame={this.props.newGame} 
+				endText="You Lose!"
+				playAgain={this.props.playAgain}
+				/>
+				: null }
+			{winQuery?<GameEnd 
+				newGame={this.props.newGame} 
+				endText="You Win!"
+				/>: null}
 		</div>
 		)
 	

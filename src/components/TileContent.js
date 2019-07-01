@@ -52,7 +52,7 @@ const TileContent =(props)=>{
 	}
 	if(content){
 		return (
-			<div style={dimension} className= "holdsContent">
+			<div  className= "holdsContent" >
 
 			{renderImage(content)}
 			</div>
