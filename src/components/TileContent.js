@@ -5,7 +5,7 @@ import Hole from "./Hole"
 const TileContent =(props)=>{
 	const {content, image, dimension} = props
 	const {dogBone, dinoSkull, skull, fish} = image
-	// console.log("dimension", dimension);
+	// console.log("tileProps", props)
 	const renderImage = mark =>{
 		switch(mark){
 			case 2:

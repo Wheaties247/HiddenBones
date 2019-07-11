@@ -33,7 +33,7 @@ class InitGame extends React.Component{
 		<div className="initGame">
 			<form>
 				<label htmlFor="columns">
-				   Select number of columns:
+				   Select number of rows:
 				   <input 
 				   id = "columns"
 				   name = "columns"
@@ -42,7 +42,7 @@ class InitGame extends React.Component{
 				   />
 				 </label>
 				 <label htmlFor="rows">
-				   Select number of rows:
+				   Select number of columns:
 				   <input 
 				   id = "rows"
 				   name = "rows"

@@ -6,20 +6,22 @@ import { StaticQuery, graphql } from "gatsby"
 
 const Tile =(props)=>{
 	// const dems = {width: '20%', height: '20%'}
-	const {dimension, handleClick, content, picData } = props
+	const {dimension, handleClick, content, picData, rows, columns } = props
+	// console.log("tileProps", props)
 
 	return(
 				<div 
 				onClick={handleClick}
-				style = {dimension }
+				// style = {dimension }
 				className="tile"
 
 				>
 
 				<TileContent
+				rows={rows}
+				columns={columns}
 				image ={picData}
 				content = {content}
-				dimension = {dimension }
 				/>
 				</div>
 		

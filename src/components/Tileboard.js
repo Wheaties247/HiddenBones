@@ -23,12 +23,16 @@ class Tileboard extends React.Component{
 		loseQuery,
 		misses,
 		initGame,
-		picData
+		picData,
+		tileboardHeight,
+		tileboardWidth
 	} = this.props
-	
+	const boardDimension = {width: (tileboardWidth+"px"), height: (tileboardHeight+"px")}
 		return(
 		<div className={tileboard}>
-			<div className={holdsTiles}>
+			<div 
+			style ={boardDimension} 
+			className={holdsTiles}>
 			{generateTiles(picData)}
 			</div>
 			{misses >=loseQuery ?
