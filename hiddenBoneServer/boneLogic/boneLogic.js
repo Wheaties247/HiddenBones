@@ -113,7 +113,27 @@ boneLogic.placeBones = (req, res, next) =>{
 			console.log(`OUTSIDE while loop`)
 		}
 		res.locals.newLogicArray = tileLogicArray
+		console.log("res.locals", res.locals)
+
 		next();
 }
 
+boneLogic.addWinArray = ( req, res, next) => {
+		const winArray = []
+		console.log("res.locals", res.locals)
+		const rows = res.locals.rows
+		const columns = res.locals.columns
+		const tileLogicArray = res.locals.newLogicArray
+
+		for (let r = 0; r < rows; r++) {
+			for (let c = 0; c < columns; c++) {
+				if (typeof tileLogicArray[r][c] === "number") {
+					winArray.push(tileLogicArray[r][c])
+				}
+			}
+		}
+		winArray.sort((a, b) => b - a)
+		res.locals.bonesToGo = winArray 
+		next();
+	}
 module.exports = boneLogic;

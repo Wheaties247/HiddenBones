@@ -103,22 +103,28 @@ class HiddenBones extends React.Component {
 		const { rows, columns } = this.state
 		axios
 			.post(`http://localhost:7770/logic/${rows}/${columns}`)
-			.then(res => console.log("fetch complete", res))
+			.then(res => {
+				const {tileLogicArray, winArray} = res.data 
+				console.log("fetch complete", res)
+				this.setState({ 
+					tileLogicArray: tileLogicArray, bonesToGo:winArray 
+				})
+			})
 			.catch(err => {
-				console.log("there was an error in fetch", err)
+				console.log("there was an error in axios request", err)
 				//error message in console if the was an issue with the error with respective error output
 			})
-		const array = []
-		const spaces = rows * columns
-		for (let i = 0; i < rows; i++) {
-			const column = Array(columns).fill(null)
-			array.push(column)
-		}
-		// console.log("populated Array", array)
-		this.setState({ tileLogicArray: array, initGame: true }, () => {
-			console.log("INIT GAME: TRUE")
-			this.createBones(spaces)
-		})
+		// const array = []
+		// const spaces = rows * columns
+		// for (let i = 0; i < rows; i++) {
+		// 	const column = Array(columns).fill(null)
+		// 	array.push(column)
+		// }
+		// // console.log("populated Array", array)
+		// this.setState({ tileLogicArray: array, initGame: true }, () => {
+		// 	console.log("INIT GAME: TRUE")
+		// 	// this.createBones(spaces)
+		// })
 	}
 	generateTiles(data) {
 		// console.log("generateTiles")
@@ -217,278 +223,7 @@ class HiddenBones extends React.Component {
 			return true
 		}
 	}
-	createBones(spaces) {
-		const halfSpaces = spaces / 2
-		let boneTotal = 0
-		const boneArray = []
-		let counter = 2
-		while (boneTotal < halfSpaces) {
-			if (counter > 5) {
-				counter = 2
-			}
-			if (counter === 2) {
-				boneTotal += 2
-				boneArray.push(2)
-			}
-			if (counter === 3) {
-				boneTotal += 3
-				boneArray.push(3)
-			}
-			if (counter === 4) {
-				boneTotal += 4
-				boneArray.push(4)
-			}
-			if (counter === 5) {
-				boneTotal += 5
-				boneArray.push(5)
-			}
-			counter++
-		}
-		boneArray.sort((a, b) => b - a)
-
-		console.log("boneArray", boneArray)
-		this.placeBones(boneArray)
-	}
-	placeBones(boneArray) {
-		const { rows, columns } = this.state
-		// const colIndexLimit = columns - 1
-		// const rowIndexLimit = rows - 1
-		for (let i = 0; i < boneArray.length; i++) {
-			// const randomRowIndex = this.randomNumber(rowIndexLimit)
-
-			let boneFits = false
-			let boneSpace = false
-			console.log(`FOR loop`)
-			while (!boneFits || !boneSpace) {
-				let randomRowIndex = this.randomNumber(rows)
-				let randomColIndex = this.randomNumber(columns)
-				let coordinates = [randomRowIndex, randomColIndex]
-				let answerArray = this.canBoneFitQuery(coordinates, boneArray[i])
-				// if(answerArra)
-				console.log(`WHILE loop
-				current Bone : 
-				${boneArray[i]}
-				 answerArray: 
-				${answerArray}
-				coordinates : 
-				${coordinates}`)
-				boneFits = answerArray[0]
-
-				if (boneFits) {
-					const direction = answerArray[1]
-					const addOrSub = answerArray[2]
-					boneSpace = this.boneSpaceQuery(
-						coordinates,
-						boneArray[i],
-						direction,
-						addOrSub
-					)
-					console.log(`BONE FITS BUT...
-									boneSpace :
-									${boneSpace}`)
-					if (boneSpace) {
-						this.addBoneToTileLogic(
-							coordinates,
-							boneArray[i],
-							direction,
-							addOrSub
-						)
-					}
-				}
-				console.log(`END OF WHILE LOOP
-					boneFits : ${boneFits}
-					boneSpace : ${boneSpace}`)
-			}
-
-			console.log(`OUTSIDE while loop`)
-			this.setState({ initGame: false }, () => console.log("INIT GAME : FALSE"))
-		}
-	}
-	addBoneToTileLogic(coordinates, boneSize, direction, addOrSub) {
-		const { tileLogicArray } = this.state
-		console.log(`WITHIN addBoneToTileLogic :
-				tileLogicArray:
-				 ${JSON.stringify(tileLogicArray)}`)
-		let row = coordinates[0]
-		let column = coordinates[1]
-		let logicArray = tileLogicArray
-
-		if (direction === "hor") {
-			if (addOrSub === "add") {
-				for (let i = 0; i < boneSize; i++) {
-					logicArray[row][column + i] = boneSize
-				}
-			}
-			if (addOrSub === "sub") {
-				for (let i = 0; i < boneSize; i++) {
-					logicArray[row][column - i] = boneSize
-				}
-			}
-		}
-		if (direction === "vert") {
-			if (addOrSub === "add") {
-				for (let i = 0; i < boneSize; i++) {
-					logicArray[row + i][column] = boneSize
-				}
-			}
-			if (addOrSub === "sub") {
-				for (let i = 0; i < boneSize; i++) {
-					logicArray[row - i][column] = boneSize
-				}
-			}
-		}
-		this.setState({ tileLogicArray: logicArray }, () => {
-			this.addWinArray()
-		})
-	}
-	addWinArray() {
-		const winArray = []
-		const { rows, columns, tileLogicArray } = this.state
-		for (let r = 0; r < rows; r++) {
-			for (let c = 0; c < columns; c++) {
-				if (typeof tileLogicArray[r][c] === "number") {
-					winArray.push(tileLogicArray[r][c])
-				}
-			}
-		}
-		winArray.sort((a, b) => b - a)
-		this.setState({ bonesToGo: winArray })
-		console.log("addWin Array Running")
-	}
-	boneSpaceQuery(coordinates, boneSize, direction, addOrSub) {
-		const { tileLogicArray } = this.state
-		console.log(`WITHIN boneSpaceQuery :
-				tileLogicArray:
-				 ${JSON.stringify(tileLogicArray)}`)
-		let row = coordinates[0]
-		let column = coordinates[1]
-		if (direction === "hor") {
-			if (addOrSub === "add") {
-				for (let i = 0; i < boneSize; i++) {
-					let freeSpaceQuery = tileLogicArray[row][column + i]
-					console.log(`boneSpaceQuery :
-								direction : ${direction}
-								addOrSub : ${addOrSub}
-							 	freeSpaceQuery : ${freeSpaceQuery}`)
-					if (freeSpaceQuery) {
-						return false // only runs if freeSpaceQuery is not falsy
-					}
-				}
-				return true //only runs if all iterations are null
-			}
-			if (addOrSub === "sub") {
-				for (let i = 0; i < boneSize; i++) {
-					let freeSpaceQuery = tileLogicArray[row][column - i]
-					console.log(`boneSpaceQuery :
-								direction : ${direction}
-								addOrSub : ${addOrSub}
-								freeSpaceQuery : ${freeSpaceQuery}`)
-					if (freeSpaceQuery) {
-						return false // only runs if freeSpaceQuery is not falsy
-					}
-				}
-				return true //only runs if all iterations are null
-			}
-		}
-		if (direction === "vert") {
-			if (addOrSub === "add") {
-				for (let i = 0; i < boneSize; i++) {
-					let freeSpaceQuery = tileLogicArray[row + i][column]
-					console.log(`boneSpaceQuery :
-								direction : ${direction}
-								addOrSub : ${addOrSub}
-							 	freeSpaceQuery : ${freeSpaceQuery}`)
-					if (freeSpaceQuery) {
-						return false // only runs if freeSpaceQuery is not falsy
-					}
-				}
-				return true //only runs if all iterations are null
-			}
-			if (addOrSub === "sub") {
-				for (let i = 0; i < boneSize; i++) {
-					let freeSpaceQuery = tileLogicArray[row - i][column]
-					console.log(`boneSpaceQuery :
-								direction : ${direction}
-								addOrSub : ${addOrSub}
-								freeSpaceQuery : ${freeSpaceQuery}`)
-					if (freeSpaceQuery) {
-						return false // only runs if freeSpaceQuery is not falsy
-					}
-				}
-				return true //only runs if all iterations are null
-			}
-		}
-	}
-	canBoneFitQuery(coordinates, boneSize) {
-		let vertOrHorizontal = this.randomNumber(2)
-
-		const boneAndStartPoint = boneSize - 1
-		const { rows, columns } = this.state
-		const colIndexLimit = columns - 1
-		const rowIndexLimit = rows - 1
-		console.log(`current params
-				 Bone Size: 
-				${boneSize}
-				coordinates : 
-				${coordinates}`)
-		if (vertOrHorizontal) {
-			//if value is 1 direction is vertical
-			let directional = vertOrHorizontal ? "vert" : "hor"
-			const addCheck = coordinates[0] + boneAndStartPoint
-
-			if (addCheck <= rowIndexLimit) {
-				console.log(`fitCheck 
-						true: add
-						direction ${directional}
-						coordinates ${coordinates}`)
-				return [true, directional, "add"]
-			} else {
-				const subCheck = coordinates[0] - boneAndStartPoint
-				if (subCheck >= 0) {
-					console.log(`fitCheck 
-						true: sub
-						direction ${directional}
-						coordinates ${coordinates}`)
-
-					return [true, directional, "sub"]
-				} else {
-					console.log(`fitCheck
-					 false:
-					direction ${directional}`)
-					return [false, directional]
-				}
-			}
-		} else {
-			let directional = vertOrHorizontal ? "vert" : "hor"
-			const addCheck = coordinates[1] + boneAndStartPoint
-			if (addCheck <= colIndexLimit) {
-				console.log(`fitCheck 
-						true: add
-						direction ${directional}
-						coordinates ${coordinates}`)
-				return [true, directional, "add"]
-			} else {
-				const subCheck = coordinates[1] - boneAndStartPoint
-				if (subCheck >= 0) {
-					console.log(`fitCheck 
-						true: add
-						direction ${directional}
-						coordinates ${coordinates}`)
-					return [true, directional, "sub"]
-				} else {
-					console.log(`fitCheck 
-						false:
-					direction ${directional}`)
-					return [false]
-				}
-			}
-		}
-	}
-	randomNumber(number) {
-		const random = Math.floor(Math.random() * number)
-		console.log(`randomNumber : ${random}`)
-		return random
-	}
+	
 	showMovesToWin(data) {
 		const { dogBone, dinoSkull, skull, fish } = data
 		const { bonesToGo } = this.state
@@ -626,7 +361,6 @@ class HiddenBones extends React.Component {
 						winQuery,
 						loseQuery,
 						misses,
-						initGame,
 						tileboardHeight,
 						tileboardWidth,
 					} = this.state
@@ -666,7 +400,6 @@ class HiddenBones extends React.Component {
 										playAgain={playAgain}
 										newGame={newGame}
 										picData={data}
-										initGame={initGame}
 										loseQuery={loseQuery}
 										misses={misses}
 										winQuery={winQuery}

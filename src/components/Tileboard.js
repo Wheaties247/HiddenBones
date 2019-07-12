@@ -22,7 +22,6 @@ class Tileboard extends React.Component{
 		winQuery,
 		loseQuery,
 		misses,
-		initGame,
 		picData,
 		tileboardHeight,
 		tileboardWidth

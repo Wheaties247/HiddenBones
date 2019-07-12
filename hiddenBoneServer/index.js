@@ -18,10 +18,14 @@ app.post('/logic/:rows/:columns',
 		 bonelogic.tileLogic,
 		 bonelogic.createBones, 
 		 bonelogic.placeBones,
+		 bonelogic.addWinArray,
 		 (req, res, next)=>{
 	console.log("request complete")
 
-	res.json(res.locals.newLogicArray)
+	res.json({
+		tileLogicArray : res.locals.newLogicArray,
+		winArray : res.locals.bonesToGo
+	})
 })
 
 
