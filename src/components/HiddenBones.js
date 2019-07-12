@@ -3,6 +3,7 @@ import hiddenBoneStyles from "../styles/hidden-bones.module.css"
 import InitGame from "./InitGame"
 import Tileboard from "./Tileboard"
 import Tile from "./Tile"
+
 import { StaticQuery, graphql } from "gatsby"
 import Img from "gatsby-image"
 const axios = require("axios")
@@ -33,6 +34,7 @@ class HiddenBones extends React.Component {
 			markedTile: [],
 			tileboardWidth: 0,
 			tileboardHeight: 0,
+			loading:false
 		}
 		this.newGame = this.newGame.bind(this)
 		this.playAgain = this.playAgain.bind(this)
@@ -41,14 +43,11 @@ class HiddenBones extends React.Component {
 		this.cordinateDisplayCalc = this.cordinateDisplayCalc.bind(this)
 		this.tileLogic = this.tileLogic.bind(this)
 		this.generateTiles = this.generateTiles.bind(this)
-		this.createBones = this.createBones.bind(this)
-		this.placeBones = this.placeBones.bind(this)
-		this.canBoneFitQuery = this.canBoneFitQuery.bind(this)
-		this.boneSpaceQuery = this.boneSpaceQuery.bind(this)
-		this.addBoneToTileLogic = this.addBoneToTileLogic.bind(this)
+
+
+
 		this.markTile = this.markTile.bind(this)
 		this.checkWin = this.checkWin.bind(this)
-		this.addWinArray = this.addWinArray.bind(this)
 		this.checkLose = this.checkLose.bind(this)
 	}
 	cordinateDisplayCalc(tileKey) {
@@ -74,7 +73,7 @@ class HiddenBones extends React.Component {
 				const contentArray = Array(spaces).fill(`unclicked`)
 				const loseQuery = Math.floor(spaces / 3)
 				this.setState(prevState => {
-					
+					prevState.loading = true
 					prevState.columns = intColumns
 					prevState.rows = intRows
 					prevState.tileContent = contentArray
@@ -82,6 +81,7 @@ class HiddenBones extends React.Component {
 					prevState.tileboardHeight = intColumns * 150
 					prevState.tileboardWidth = intRows * 150
 					prevState.showInitGame = false
+					
 					return prevState
 				})
 			} else {
@@ -107,7 +107,8 @@ class HiddenBones extends React.Component {
 				const {tileLogicArray, winArray} = res.data 
 				console.log("fetch complete", res)
 				this.setState({ 
-					tileLogicArray: tileLogicArray, bonesToGo:winArray 
+					tileLogicArray: tileLogicArray, bonesToGo:winArray,
+					loading:false
 				})
 			})
 			.catch(err => {
@@ -363,6 +364,7 @@ class HiddenBones extends React.Component {
 						misses,
 						tileboardHeight,
 						tileboardWidth,
+						loading
 					} = this.state
 					const {
 						startGame,
@@ -395,6 +397,7 @@ class HiddenBones extends React.Component {
 									/>
 								) : (
 									<Tileboard
+									loading={loading}
 										tileboardHeight={tileboardHeight}
 										tileboardWidth={tileboardWidth}
 										playAgain={playAgain}

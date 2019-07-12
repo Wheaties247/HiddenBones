@@ -1,6 +1,7 @@
 import React from "react"
 import tileboardStyles from "../styles/tileboard.module.css"
 import GameEnd from "./GameEnd"
+import Loading from "./Loading"
 
 const {
 	tileboard,
@@ -24,11 +25,13 @@ class Tileboard extends React.Component{
 		misses,
 		picData,
 		tileboardHeight,
-		tileboardWidth
+		tileboardWidth,
+		loading
 	} = this.props
 	const boardDimension = {width: (tileboardWidth+"px"), height: (tileboardHeight+"px")}
 		return(
 		<div className={tileboard}>
+		{loading? <Loading />: null}
 			<div 
 			style ={boardDimension} 
 			className={holdsTiles}>

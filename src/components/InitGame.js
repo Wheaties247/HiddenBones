@@ -1,5 +1,6 @@
 import React from "react"
 import Button from "./Button"
+import Loading from "./Loading"
 
 class InitGame extends React.Component{
 	constructor(props){
