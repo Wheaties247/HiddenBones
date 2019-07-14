@@ -52,13 +52,23 @@ class HiddenBones extends React.Component {
 	}
 	cordinateDisplayCalc(tileKey) {
 		const { rows, columns } = this.state
+		console.log(`cordinateDisplayCalc -
+			rows : ${rows}
+			columns${columns}`)
 		let resultString = ""
 		if (tileKey < columns) {
 			resultString += "(1 , "
+			//returns well
 		} else {
-			resultString += "(" + Math.ceil(tileKey / rows) + " ,"
+			resultString += "(" + (1 + Math.floor(tileKey / rows) )+ " ,"
 		}
-		console.log("resultString", resultString)
+		const getCol = (tileKey+1) % rows
+		if(getCol){
+			resultString += (getCol +" )")
+		}else{
+			resultString += (rows +" )")
+		}
+		return resultString
 	}
 	startGame(data) {
 		const { rows, columns } = data
@@ -144,7 +154,7 @@ class HiddenBones extends React.Component {
 
 		for (let i = 0; i < spaces; i++) {
 			// const tileNumber = i+1
-			this.cordinateDisplayCalc(i)
+			const marker = this.cordinateDisplayCalc(i)
 			holdsTiles.push(
 				<Tile
 					picData={data}
@@ -154,6 +164,7 @@ class HiddenBones extends React.Component {
 					columns={columns}
 					dimension={dimension}
 					content={tileContent[i]}
+					marker = {marker}
 					handleClick={() => this.markTile(i)}
 				/>
 			)

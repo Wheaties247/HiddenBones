@@ -1,9 +1,11 @@
 import React from "react"
 import Img from "gatsby-image"
 import Hole from "./Hole"
+import styles from "../styles/tileContent.module.css"
 
+const {holdsContent,  marker:markerStyle, holdsMarker} = styles
 const TileContent =(props)=>{
-	const {content, image, dimension} = props
+	const {content, image, dimension, marker} = props
 	const {dogBone, dinoSkull, skull, fish} = image
 	// console.log("tileProps", props)
 	const renderImage = mark =>{
@@ -45,14 +47,14 @@ const TileContent =(props)=>{
 
 	if(content===`unclicked`){
 		return (
-			<div className= "holdsContent">
-			{ null}
+			<div className= {holdsMarker}>
+			<h1 className= {markerStyle}>{ marker}</h1>
 			</div>
 			)
 	}
 	if(content){
 		return (
-			<div  className= "holdsContent" >
+			<div  className= {holdsContent} >
 
 			{renderImage(content)}
 			</div>

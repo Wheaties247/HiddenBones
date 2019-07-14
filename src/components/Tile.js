@@ -6,7 +6,14 @@ import { StaticQuery, graphql } from "gatsby"
 
 const Tile =(props)=>{
 	// const dems = {width: '20%', height: '20%'}
-	const {dimension, handleClick, content, picData, rows, columns } = props
+	const {
+		dimension, 
+		handleClick, 
+		content, 
+		picData, 
+		rows, 
+		columns,
+		marker } = props
 	// console.log("tileProps", props)
 
 	return(
@@ -18,6 +25,7 @@ const Tile =(props)=>{
 				>
 
 				<TileContent
+				marker= {marker}
 				rows={rows}
 				columns={columns}
 				image ={picData}
