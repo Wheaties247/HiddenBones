@@ -30,7 +30,7 @@ class HiddenBones extends React.Component {
 			loseQuery: 0,
 			misses: 0,
 			initGame: false,
-			bonesToGo: 0,
+			bonesToGo: [],
 			markedTile: [],
 			tileboardWidth: 0,
 			tileboardHeight: 0,
@@ -111,11 +111,13 @@ class HiddenBones extends React.Component {
 	}
 	tileLogic() {
 		const { rows, columns } = this.state
+		const herokuURl= "https://hidden-bones-server.herokuapp.com"
+		const localURL = "localhost/7770"
 		axios
-			.post(`http://localhost:7770/logic/${rows}/${columns}`)
+			.get(`${herokuURl}/logic/${rows}/${columns}`)
 			.then(res => {
 				const {tileLogicArray, winArray} = res.data 
-				console.log("fetch complete", res)
+				console.log("post complete", res)
 				this.setState({ 
 					tileLogicArray: tileLogicArray, bonesToGo:winArray,
 					loading:false
